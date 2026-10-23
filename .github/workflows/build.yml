@@ -16,6 +16,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: DeltaVisual_source/DV
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,6 +30,7 @@ jobs:
           distribution: temurin
           java-version: "8"
           cache: gradle
+          cache-dependency-path: DeltaVisual_source/DV/**/*.gradle*
 
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x gradlew
@@ -36,7 +41,7 @@ jobs:
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: minecraft-forge-1.16.5-mod
-          path: build/libs/*.jar
+          name: DeltaVisual-Forge-1.16.5
+          path: DeltaVisual_source/DV/build/libs/*.jar
           if-no-files-found: error
           retention-days: 14
