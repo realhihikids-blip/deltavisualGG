@@ -16,10 +16,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: DeltaVisual_source/DV
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,19 +25,32 @@ jobs:
         with:
           distribution: temurin
           java-version: "8"
-          cache: gradle
-          cache-dependency-path: DeltaVisual_source/DV/**/*.gradle*
+
+      - name: Find Gradle wrapper
+        id: find-gradle
+        shell: bash
+        run: |
+          GRADLEW_PATH="$(find "$GITHUB_WORKSPACE" -type f -name gradlew -not -path '*/.git/*' -print -quit)"
+          if [ -z "$GRADLEW_PATH" ]; then
+            echo "Error: gradlew was not found in the repository."
+            exit 1
+          fi
+          PROJECT_DIR="$(dirname "$GRADLEW_PATH")"
+          echo "project_dir=$PROJECT_DIR" >> "$GITHUB_OUTPUT"
+          echo "Found Gradle wrapper in: $PROJECT_DIR"
 
       - name: Grant execute permission to Gradle wrapper
+        working-directory: ${{ steps.find-gradle.outputs.project_dir }}
         run: chmod +x gradlew
 
       - name: Build mod
+        working-directory: ${{ steps.find-gradle.outputs.project_dir }}
         run: ./gradlew --no-daemon build
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: DeltaVisual-Forge-1.16.5
-          path: DeltaVisual_source/DV/build/libs/*.jar
+          path: ${{ steps.find-gradle.outputs.project_dir }}/build/libs/*.jar
           if-no-files-found: error
           retention-days: 14
