@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="deltavisual"
+version="1.0.0"
+displayName="Delta Visual"
+logoFile="logo.png"
+authors="Delta"
+description='''
+Delta Visual - visual client mod for Minecraft 1.16.5 (Forge).
+Press Right Shift to open the menu.
+'''
+
+[[dependencies.deltavisual]]
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.deltavisual]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="CLIENT"
